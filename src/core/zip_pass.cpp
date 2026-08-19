@@ -184,7 +184,7 @@ int importZipPass(std::string path)
 		
 		struct Service::CECD::Module::CecBoxInfoHeader boxInfo;
 		FileUtil::IOFile bfile(boxInfoPath, "rb+");
-		int nRead = bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+		bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader)); // FIX: Removed unused 'nRead'
 		
 		if(st.size > boxInfo.max_message_size)
 		{
@@ -231,9 +231,9 @@ int importZipPass(std::string path)
 		std::string sTitleId = "";
 		unsigned char* bTitleId = (unsigned char*)&messHead->title_id;
 	
-		for(int i=3; i>=0; i--)
+		for(int j=3; j>=0; j--) // FIX: Renamed 'i' to 'j' to prevent hiding outer loop variable
 		{
-			std::string s = fmt::format("{:02x}", bTitleId[i]);
+			std::string s = fmt::format("{:02x}", bTitleId[j]);
 			sTitleId += s;
 		}
 	
@@ -275,20 +275,20 @@ int importZipPass(std::string path)
 		rng.GenerateBlock(messHead->message_id.data(), messHead->message_id.size());
 		filename = "_" + Service::CECD::Module::EncodeBase64(messHead->message_id);
 		
-		std::string path = inboxPath + DIR_SEP + filename;
+		std::string target_path = inboxPath + DIR_SEP + filename; // FIX: Renamed 'path' to 'target_path' to prevent hiding function parameter
 		
 		if(ext_inbox) {
-			path = ext_inbox_path + filename;
+			target_path = ext_inbox_path + filename;
 		}
 		
-		FileUtil::IOFile dfile(path, "wb");
+		FileUtil::IOFile dfile(target_path, "wb");
 	
 		int written = (int)dfile.WriteBytes(buff, st.size);
 		LOG_ERROR(HW, "WriteBytes n {}", written);
 
 		dfile.Close();
 		
-		if(written != st.size)
+		if(written != static_cast<int>(st.size)) // FIX: Added cast to resolve signed/unsigned mismatch
 		{
 			LOG_ERROR(HW, "written != st.size {} / {}", written, st.size);
 			
@@ -367,7 +367,7 @@ int importQueuedZipPass()
 			{
 				struct Service::CECD::Module::CecBoxInfoHeader boxInfo;
 				FileUtil::IOFile bfile(boxInfoPath, "rb+");
-				int nRead = bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+				bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader)); // FIX: Removed unused 'nRead'
 				
 				if(boxInfo.message_num >= boxInfo.max_message_num)
 				{
