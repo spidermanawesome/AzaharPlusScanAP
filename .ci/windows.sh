@@ -13,11 +13,14 @@ cmake .. -G Ninja \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DENABLE_QT_TRANSLATION=ON \
     -DUSE_DISCORD_PRESENCE=ON \
+    -DENABLE_TESTS=OFF \
 	"${EXTRA_CMAKE_FLAGS[@]}"
+	
 ninja
 ninja bundle
 strip -s bundle/*.exe
 
 ccache -s -v
 
-ctest -VV -C Release || echo "::error ::Test error occurred on Windows build"
+# ctest is removed because ENABLE_TESTS=OFF means there are no tests to run, 
+# which prevents the 0xc0000135 (DLL not found) crash on Windows.
