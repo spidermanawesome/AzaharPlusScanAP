@@ -177,6 +177,11 @@ jobs:
       - name: Install extra tools (MSVC)
         if: ${{ matrix.target == 'msvc' }}
         run: choco install ccache ninja ptime wget
+      - name: Install zlib (MSVC)
+        if: ${{ matrix.target == 'msvc' }}
+        run: |
+          "$VCPKG_INSTALLATION_ROOT/vcpkg" install zlib:x64-windows
+          echo "CMAKE_PREFIX_PATH=$VCPKG_INSTALLATION_ROOT/installed/x64-windows" >> "$GITHUB_ENV"
       - name: Install vulkan-sdk (MSVC)
         if: ${{ matrix.target == 'msvc' }}
         run: |
