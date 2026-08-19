@@ -27,6 +27,6 @@ if [ -f "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/z.dll" ]; then
     cp "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/z.dll" bundle/
 fi
 
-strip -s bundle/*.exe
+# REMOVED: strip -s bundle/*.exe (This corrupts MSVC binaries in Git Bash!)
 
 ccache -s -v
