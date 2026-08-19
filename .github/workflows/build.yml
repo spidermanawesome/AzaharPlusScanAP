@@ -176,7 +176,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: Install extra tools (MSVC)
         if: ${{ matrix.target == 'msvc' }}
-        run: choco install ccache ninja ptime wget zlib-devel
+        run: choco install ccache ninja ptime wget
       - name: Install vulkan-sdk (MSVC)
         if: ${{ matrix.target == 'msvc' }}
         run: |
