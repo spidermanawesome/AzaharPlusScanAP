@@ -182,6 +182,7 @@ jobs:
         run: |
           "$VCPKG_INSTALLATION_ROOT/vcpkg" install zlib:x64-windows
           echo "CMAKE_PREFIX_PATH=$VCPKG_INSTALLATION_ROOT/installed/x64-windows" >> "$GITHUB_ENV"
+          echo "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin" >> "$GITHUB_PATH"
       - name: Install vulkan-sdk (MSVC)
         if: ${{ matrix.target == 'msvc' }}
         run: |
