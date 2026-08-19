@@ -18,9 +18,15 @@ cmake .. -G Ninja \
 	
 ninja
 ninja bundle
+
+# Manually copy zlib DLLs to ensure they're included in the bundle
+if [ -f "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/zlib1.dll" ]; then
+    cp "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/zlib1.dll" bundle/
+fi
+if [ -f "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/z.dll" ]; then
+    cp "$VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin/z.dll" bundle/
+fi
+
 strip -s bundle/*.exe
 
 ccache -s -v
-
-# ctest is removed because ENABLE_TESTS=OFF means there are no tests to run, 
-# which prevents the 0xc0000135 (DLL not found) crash on Windows.
